@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories\v1;
+
 use App\Models\User;
 use App\Repositories\Base\BaseAbstract;
 

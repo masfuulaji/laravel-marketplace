@@ -2,27 +2,34 @@
 
 namespace App\Repositories\Base;
 
+//use Barryvdh\LaravelIdeHelper\Eloquent;
 use Illuminate\Container\Container as Application;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Model;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 abstract class BaseAbstract implements BaseInterface
 {
-    protected $model;
-    protected $app;
+    protected Model $model;
+    protected Application $app;
 
     public function __construct(Application $app)
     {
         $this->app = $app;
+        $this->bindModel();
     }
 
-    public function bindModel(): Model
+    public function bindModel(): \Exception|BindingResolutionException | Model
     {
-        $model = $this->app->make($this->model());
-        if (!$model instanceof Model) {
-            throw new BindingResolutionException('Model not found.');
+        try {
+            $model = $this->app->make($this->model());
+            if (!$model instanceof Model) {
+                throw new BindingResolutionException('Model not found.');
+            }
+            return $model;
+        } catch (BindingResolutionException $e) {
+            return $e;
         }
-        return $model;
     }
 
     abstract public function model(): string;
@@ -42,19 +49,23 @@ abstract class BaseAbstract implements BaseInterface
         return $this->model->where($filter)->first();
     }
 
-    public function create(array $data){
+    public function create(array $data)
+    {
         return $this->model->create($data);
     }
 
-    public function update($id, array $data){
+    public function update($id, array $data)
+    {
         return $this->model->findOrFail($id)->update($data);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         return $this->model->findOrFail($id)->delete();
     }
 
-    public function paginate(int $perPage = 15, array $columns = [], string $orderBy = 'id', string $sort = 'desc'){
+    public function paginate(int $perPage = 15, array $columns = [], string $orderBy = 'id', string $sort = 'desc')
+    {
         return $this->model->where($columns)->orderBy($orderBy, $sort)->paginate($perPage);
     }
 }
