@@ -5,21 +5,22 @@ namespace App\Http\Controllers\Api\v1;
 use App\Http\Controllers\Controller;
 use App\Repositories\v1\UserRepository;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class UserController extends Controller
 {
     protected UserRepository $userRepository;
-    public function __construct($userRepository)
+    public function __construct(UserRepository $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function findById($id)
+    public function findById(string $id): JsonResponse
     {
         return $this->userRepository->findById($id);
     }
 
-    public function findAll(Request $request)
+    public function findAll(Request $request) : JsonResponse
     {
         $validatedData = $request->validate([
             'name' => 'string|max:255',
@@ -29,7 +30,7 @@ class UserController extends Controller
         return $this->userRepository->findAll($validatedData);
     }
 
-    public function findWhere(Request $request)
+    public function findWhere(Request $request) : JsonResponse
     {
         $validatedData = $request->validate([
             'name' => 'string|max:255',
@@ -38,7 +39,7 @@ class UserController extends Controller
         return $this->userRepository->findWhere($validatedData);
     }
 
-    public function create(Request $request)
+    public function create(Request $request) : JsonResponse
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
@@ -48,7 +49,7 @@ class UserController extends Controller
         return $this->userRepository->create($validatedData);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id) : JsonResponse
     {
         $validatedData = $request->validate([
             'name' => 'string|max:255',
@@ -63,7 +64,7 @@ class UserController extends Controller
         return $this->userRepository->update($id, $validatedData);
     }
 
-    public function delete($id)
+    public function delete(string $id) : JsonResponse
     {
         return $this->userRepository->delete($id);
     }

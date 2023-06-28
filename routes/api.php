@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\v1\AdminController;
 use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,23 +15,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/test', function (Request $request) {
     return $request->user();
 });
 
 Route::prefix('/v1')->group(function () {
+    Route::get('/', function () {
+        return response()->json(['message' => 'Welcome to API v1.']);
+    });
+
     Route::prefix('/user')->group(function () {
         Route::get('/', [UserController::class, 'findAll']);
         Route::get('/{id}', [UserController::class, 'findById']);
         Route::post('/', [UserController::class, 'create']);
         Route::put('/{id}', [UserController::class, 'update']);
         Route::delete('/{id}', [UserController::class, 'delete']);
-    });
-    Route::prefix('/admin')->group(function () {
-        Route::get('/', [AdminController::class, 'findAll']);
-        Route::get('/{id}', [AdminController::class, 'findById']);
-        Route::post('/', [AdminController::class, 'create']);
-        Route::put('/{id}', [AdminController::class, 'update']);
-        Route::delete('/{id}', [AdminController::class, 'delete']);
     });
 });
