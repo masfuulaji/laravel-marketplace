@@ -12,7 +12,7 @@ class UserRepository extends BaseAbstract
         return User::class;
     }
 
-    public function count($filter = []){
+    public function count($filter = []): int{
         return $this->model->where($filter)->count();
     }
 }
