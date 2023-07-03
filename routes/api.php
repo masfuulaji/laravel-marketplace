@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,10 @@ Route::middleware('auth:sanctum')->get('/test', function (Request $request) {
 Route::prefix('/v1')->group(function () {
     Route::get('/', function () {
         return response()->json(['message' => 'Welcome to API v1.']);
+    });
+    Route::prefix('/auth')->group(function () {
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/logout', [AuthController::class, 'logout']);
     });
 
     Route::prefix('/user')->group(function () {
